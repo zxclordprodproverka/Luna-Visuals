@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>LunaVisuals</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌙</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #08080c;
+      --bg-card: #101016;
+      --bg-elevated: #17171f;
+      --bg-sidebar: #0c0c12;
+      --border: #2a2a35;
+      --border-soft: #1e1e28;
+      --text: #f2f2f7;
+      --text-muted: #9b9baf;
+      --text-dim: #6e6e82;
+      --accent: #a78bfa;
+      --accent-soft: rgba(167,139,250,0.14);
+      --accent-glow: rgba(167,139,250,0.35);
+      --success: #34d399;
+      --danger: #f87171;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --radius-lg: 16px;
+      --shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    body{font-family:'Space Grotesk',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.55;overflow-x:hidden;letter-spacing:.02em}
+    #particles{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.8}
+    .page{position:relative;z-index:1}
+    .fade-in{animation:fadeIn .3s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border-radius:var(--radius-sm);font-size:.9rem;font-weight:600;border:none;cursor:pointer;transition:all .18s;font-family:inherit;user-select:none}
+    .btn:active{transform:scale(.97)}
+    .btn-primary{background:var(--accent);color:#0a0a0c;box-shadow:0 2px 14px var(--accent-glow)}
+    .btn-primary:hover{filter:brightness(1.1)}
+    .btn-secondary{background:var(--bg-elevated);color:var(--text);border:1px solid var(--border)}
+    .btn-secondary:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+    .btn-danger{background:rgba(248,113,113,.12);color:var(--danger);border:1px solid rgba(248,113,113,.25)}
+    .btn-block{width:100%}
+    .btn-lg{padding:14px 28px;font-size:1rem}
+    .btn-sm{padding:7px 14px;font-size:.8rem}
+
+    #landing{min-height:100vh;display:flex;flex-direction:column}
+    .landing-header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;background:rgba(8,8,12,.88);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+    .logo{font-family:'Syne',sans-serif;font-size:1.35rem;font-weight:700;letter-spacing:.12em;color:var(--text);display:flex;align-items:center;gap:9px}
+    .logo-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#6d28d9);display:flex;align-items:center;justify-content:center;box-shadow:0 0 14px var(--accent-glow)}
+    .logo-icon svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:1.6}
+    .header-actions{display:flex;align-items:center;gap:8px}
+    .landing-main{flex:1;max-width:700px;margin:0 auto;padding:12px 18px 48px;width:100%}
+
+    .hero{text-align:center;padding:44px 0 32px}
+    .hero-badge{display:inline-block;background:var(--accent-soft);color:var(--accent);font-size:.72rem;font-weight:600;padding:5px 12px;border-radius:20px;margin-bottom:16px;letter-spacing:.06em;text-transform:uppercase}
+    .hero h1{font-family:'Syne',sans-serif;font-size:2.8rem;font-weight:800;letter-spacing:.14em;margin-bottom:14px;background:linear-gradient(135deg,#f2f2f7 5%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero p{color:var(--text-muted);font-size:1.02rem;max-width:380px;margin:0 auto 26px;line-height:1.6}
+    .hero-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+    .section-title{font-family:'Syne',sans-serif;font-size:1.35rem;font-weight:700;letter-spacing:.1em;margin-bottom:8px;text-align:center}
+    .section-sub{text-align:center;color:var(--text-muted);font-size:.88rem;margin-bottom:20px}
+
+    .about-block{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px 20px;margin:32px 0;text-align:left}
+    .about-block p{color:var(--text-muted);font-size:.92rem;margin-bottom:12px;line-height:1.65}
+    .about-block p:last-child{margin-bottom:0}
+
+    .features-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:32px 0}
+    .feat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 15px;transition:border-color .2s}
+    .feat-card:hover{border-color:var(--accent)}
+    .feat-icon{width:30px;height:30px;border-radius:8px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;margin-bottom:10px;color:var(--accent)}
+    .feat-icon svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8}
+    .feat-card h3{font-size:.92rem;font-weight:600;margin-bottom:5px}
+    .feat-card p{font-size:.8rem;color:var(--text-muted);line-height:1.5}
+
+    .why-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px 18px;margin:28px 0}
+    .why-image{width:100%;height:140px;border-radius:var(--radius);background:linear-gradient(145deg,#1e1b4b,#4c1d95 40%,#7c3aed 70%,var(--accent));margin-bottom:14px;display:flex;align-items:center;justify-content:center}
+    .why-image svg{width:44px;height:44px;stroke:rgba(255,255,255,.4);fill:none;stroke-width:1.2;filter:drop-shadow(0 0 18px var(--accent-glow))}
+    .why-list{list-style:none}
+    .why-list li{padding:9px 0;border-bottom:1px solid var(--border-soft);font-size:.88rem;color:var(--text-muted);display:flex;align-items:center;gap:10px}
+    .why-list li:last-child{border-bottom:none}
+    .why-list .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0}
+
+    .compare-container{position:relative;width:100%;aspect-ratio:16/10;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border);user-select:none;touch-action:none;box-shadow:var(--shadow);margin-bottom:8px}
+    .compare-img{position:absolute;inset:0;width:100%;height:100%}
+    .compare-right{background:linear-gradient(160deg,#1a2e1a,#2d4a2d 40%,#3d5c3d);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px}
+    .compare-right .label{font-size:.75rem;font-weight:600;color:rgba(255,255,255,.6);letter-spacing:.06em;text-transform:uppercase}
+    .mc-blocks{display:grid;grid-template-columns:repeat(4,24px);gap:3px}
+    .mc-block{width:24px;height:24px;border-radius:2px}
+    .mc-block.grass{background:#5a9c3d}.mc-block.dirt{background:#8b5a2b}.mc-block.stone{background:#7a7a7a}.mc-block.wood{background:#a67c52}
+    .mc-block.water{background:#3b82f6}.mc-block.sand{background:#e8d5a3}.mc-block.leaves{background:#3d8b3d}.mc-block.coal{background:#2a2a2a}
+    .compare-left{background:linear-gradient(145deg,#0f0a1f,#1e1040 30%,#3b1d6e 55%,#6b3fa0 80%,var(--accent));clip-path:inset(0 50% 0 0);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;position:relative}
+    .compare-left::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 40%,rgba(167,139,250,.35) 0%,transparent 50%)}
+    .compare-left .label{font-size:.75rem;font-weight:600;color:rgba(255,255,255,.85);letter-spacing:.06em;text-transform:uppercase;position:relative;z-index:1}
+    .compare-left .visual-icon{position:relative;z-index:1}
+    .compare-left .visual-icon svg{width:36px;height:36px;stroke:rgba(255,255,255,.85);fill:none;stroke-width:1.3;filter:drop-shadow(0 0 14px var(--accent-glow))}
+    .compare-handle{position:absolute;top:0;bottom:0;left:50%;width:3px;background:#fff;transform:translateX(-50%);z-index:10;cursor:ew-resize}
+    .compare-handle::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:30px;height:30px;background:#fff;border-radius:50%;box-shadow:0 2px 10px rgba(0,0,0,.35);background-image:linear-gradient(to right,#333 40%,transparent 40%,transparent 60%,#333 60%),linear-gradient(to bottom,transparent 40%,#333 40%,#333 60%,transparent 60%);background-size:8px 2px,2px 8px;background-position:center;background-repeat:no-repeat}
+    .compare-labels{display:flex;justify-content:space-between;font-size:.74rem;color:var(--text-dim);padding:0 2px;margin-bottom:28px}
+
+    .start-cta{text-align:center;padding:26px 18px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);margin-top:8px}
+    .start-cta p{color:var(--text-muted);margin-bottom:14px;font-size:.9rem}
+
+    /* AUTH */
+    #authOverlay{position:fixed;inset:0;background:rgba(8,8,12,.94);backdrop-filter:blur(14px);z-index:200;display:none;align-items:center;justify-content:center;padding:18px}
+    #authOverlay.show{display:flex}
+    .auth-card{background:var(--bg-card);border:1px solid var(--border);border-radius:18px;padding:30px 22px;width:100%;max-width:360px;box-shadow:var(--shadow);position:relative;animation:fadeIn .3s ease}
+    .auth-title{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;text-align:center;margin-bottom:4px;letter-spacing:.1em}
+    .auth-sub{text-align:center;color:var(--text-muted);font-size:.86rem;margin-bottom:22px}
+    .form-group{margin-bottom:13px}
+    .form-group label{display:block;font-size:.7rem;font-weight:600;color:var(--text-dim);margin-bottom:5px;letter-spacing:.05em;text-transform:uppercase}
+    .form-group input,.form-group textarea,.form-group select{width:100%;padding:11px 13px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:.93rem;font-family:inherit;outline:none}
+    .form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+    .form-group textarea{min-height:80px;resize:vertical}
+    .auth-switch{text-align:center;margin-top:16px;font-size:.86rem;color:var(--text-muted)}
+    .auth-switch a{color:var(--accent);font-weight:600;cursor:pointer}
+    .message{padding:9px 12px;border-radius:var(--radius-sm);font-size:.84rem;margin-bottom:12px;display:none}
+    .message.success{background:rgba(52,211,153,.1);color:var(--success);border:1px solid rgba(52,211,153,.22)}
+    .message.error{background:rgba(248,113,113,.1);color:var(--danger);border:1px solid rgba(248,113,113,.22)}
+    .auth-close{position:absolute;top:12px;right:12px;background:transparent;border:none;color:var(--text-dim);font-size:1.3rem;cursor:pointer;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+    .auth-close:hover{background:var(--accent-soft);color:var(--text)}
+
+    #welcomeOverlay{position:fixed;inset:0;background:var(--bg);z-index:300;display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px}
+    #welcomeOverlay.show{display:flex}
+    .welcome-text{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:700;letter-spacing:.1em;opacity:0;animation:welcomeIn .7s ease .15s forwards}
+    .welcome-sub{color:var(--text-muted);font-size:.92rem;opacity:0;animation:welcomeIn .7s ease .4s forwards}
+    @keyframes welcomeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+    /* DASHBOARD */
+    #dashboard{display:none;min-height:100vh;flex-direction:column;padding:12px}
+    #dashboard.show{display:flex}
+    .dash-shell{display:flex;flex-direction:column;max-width:880px;margin:0 auto;width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow);height:fit-content;max-height:calc(100vh - 24px)}
+    .dash-top{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid var(--border);background:var(--bg-elevated);gap:8px;flex-wrap:wrap;flex-shrink:0}
+    .dash-top-left{display:flex;align-items:center;gap:8px}
+    .dash-logo{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:.1em;color:var(--text);display:flex;align-items:center;gap:7px}
+    .dash-logo .icon{width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,var(--accent),#6d28d9);display:flex;align-items:center;justify-content:center}
+    .dash-logo .icon svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:1.6}
+    .menu-tab{padding:6px 12px;border-radius:var(--radius-sm);background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:.78rem;font-weight:600;cursor:pointer;font-family:inherit}
+    .menu-tab:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+    .user-pill{display:flex;align-items:center;gap:8px;padding:4px 10px 4px 4px;background:var(--bg);border:1px solid var(--border);border-radius:40px;cursor:pointer}
+    .user-pill:hover{border-color:var(--accent);background:var(--accent-soft)}
+    .user-pill .av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#6d28d9);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+    .user-pill .av img{width:100%;height:100%;object-fit:cover}
+    .user-pill .av svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:1.5}
+    .user-pill .name{font-size:.84rem;font-weight:600;padding-right:2px}
+
+    .dash-body{display:flex;min-height:0;overflow:hidden}
+    .dash-content{flex:1;padding:16px 14px;overflow-y:auto;min-width:0;max-height:calc(100vh - 100px)}
+    .content-panel{display:none}
+    .content-panel.active{display:block;animation:fadeIn .3s ease}
+    .panel-card{background:var(--bg);border:1px solid var(--border-soft);border-radius:var(--radius);padding:16px 14px;margin-bottom:10px}
+    .panel-title{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:700;letter-spacing:.08em;margin-bottom:12px}
+
+    .right-sidebar{width:140px;flex-shrink:0;background:var(--bg-sidebar);border-left:1px solid var(--border);padding:10px 6px;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
+    .side-item{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:var(--radius-sm);color:var(--text-muted);font-size:.8rem;font-weight:500;cursor:pointer;border:none;background:transparent;width:100%;text-align:left;font-family:inherit}
+    .side-item:hover{background:var(--accent-soft);color:var(--text)}
+    .side-item.active{background:var(--accent-soft);color:var(--accent)}
+    .side-item .ic{width:16px;height:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .side-item .ic svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.7}
+
+    /* Profile */
+    .profile-header{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+    .avatar-big{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#6d28d9);display:flex;align-items:center;justify-content:center;border:2px solid var(--border);cursor:pointer;overflow:hidden;flex-shrink:0;position:relative}
+    .avatar-big:hover{box-shadow:0 0 14px var(--accent-glow)}
+    .avatar-big img{width:100%;height:100%;object-fit:cover}
+    .avatar-big svg{width:32px;height:32px;stroke:#fff;fill:none;stroke-width:1.4}
+    .avatar-big .letter{color:#fff;font-weight:700;font-size:1.5rem;display:none}
+    .avatar-big.has-letter svg{display:none}
+    .avatar-big.has-letter .letter{display:block}
+    .avatar-big.has-custom svg,.avatar-big.has-custom .letter{display:none}
+    .profile-meta h3{font-size:1.1rem;font-weight:700;margin-bottom:2px}
+    .role-badge{display:inline-block;background:var(--accent-soft);color:var(--accent);font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:20px}
+
+    .info-grid{display:grid;gap:7px}
+    .info-row{display:flex;justify-content:space-between;align-items:center;padding:9px 11px;background:var(--bg-elevated);border-radius:var(--radius-sm);border:1px solid var(--border-soft);gap:8px}
+    .info-label{font-size:.74rem;color:var(--text-dim);font-weight:600;flex-shrink:0}
+    .info-value{font-size:.84rem;font-weight:500;text-align:right;word-break:break-all}
+    .info-value input{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:5px 8px;font-size:.84rem;font-family:inherit;width:130px;text-align:right}
+    .info-value input:focus{border-color:var(--accent);outline:none}
+
+    .avatar-picker{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+    .avatar-opt{aspect-ratio:1;border-radius:50%;background:linear-gradient(135deg,var(--accent),#6d28d9);display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid transparent;overflow:hidden}
+    .avatar-opt:hover,.avatar-opt.active{border-color:#fff;box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--accent)}
+    .avatar-opt svg{width:45%;height:45%;stroke:#fff;fill:none;stroke-width:1.5}
+    .avatar-opt.upload{background:var(--bg-elevated);border:1px dashed var(--border)}
+    .avatar-opt.upload svg{stroke:var(--text-muted)}
+
+    .update-item{padding:12px 0;border-bottom:1px solid var(--border-soft)}
+    .update-item:last-child{border-bottom:none}
+    .update-ver{display:inline-block;background:var(--accent-soft);color:var(--accent);font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:5px;margin-bottom:5px}
+    .update-title{font-weight:600;font-size:.9rem;margin-bottom:3px}
+    .update-body{font-size:.82rem;color:var(--text-muted);white-space:pre-line}
+    .update-date{font-size:.7rem;color:var(--text-dim);margin-top:5px}
+
+    .support-grid{display:grid;gap:8px}
+    .support-card{background:var(--bg-elevated);border:1px solid var(--border-soft);border-radius:var(--radius);padding:14px;display:flex;gap:11px}
+    .support-card .ic{width:26px;height:26px;border-radius:7px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--accent)}
+    .support-card .ic svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.8}
+    .support-card h4{font-size:.88rem;font-weight:600;margin-bottom:2px}
+    .support-card p{font-size:.78rem;color:var(--text-muted)}
+
+    .color-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:6px}
+    .color-swatch{aspect-ratio:1;border-radius:var(--radius-sm);cursor:pointer;border:2px solid transparent}
+    .color-swatch.active{border-color:#fff;box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--accent)}
+    .particle-opts{display:grid;gap:6px;margin-top:6px}
+    .particle-opt{padding:10px 12px;background:var(--bg-elevated);border:1px solid var(--border-soft);border-radius:var(--radius-sm);cursor:pointer;font-size:.86rem;font-weight:500}
+    .particle-opt.active,.particle-opt:hover{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+
+    /* Admin tabs */
+    .admin-tabs{display:flex;gap:4px;overflow-x:auto;margin-bottom:14px;padding-bottom:2px}
+    .admin-tab{padding:7px 12px;border-radius:var(--radius-sm);background:var(--bg-elevated);border:1px solid var(--border-soft);color:var(--text-muted);font-size:.76rem;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit}
+    .admin-tab.active{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+    .admin-pane{display:none}
+    .admin-pane.active{display:block;animation:fadeIn .25s ease}
+    .user-row{display:flex;justify-content:space-between;align-items:center;padding:9px 11px;background:var(--bg-elevated);border-radius:var(--radius-sm);border:1px solid var(--border-soft);margin-bottom:5px;font-size:.82rem}
+    .user-row .role{font-size:.68rem;color:var(--accent)}
+    .file-info{font-size:.82rem;color:var(--text-muted);margin-top:8px;padding:10px;background:var(--bg-elevated);border-radius:var(--radius-sm);border:1px solid var(--border-soft)}
+
+    #toastContainer{position:fixed;bottom:18px;left:18px;z-index:500;display:flex;flex-direction:column;gap:8px;max-width:300px}
+    .toast{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;box-shadow:var(--shadow);animation:fadeIn .3s ease;display:flex;gap:10px}
+    .toast .icon{width:20px;height:20px;border-radius:5px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--accent);font-weight:700;font-size:.75rem}
+    .toast .title{font-weight:600;font-size:.86rem}
+    .toast .msg{font-size:.78rem;color:var(--text-muted)}
+    .toast .actions{margin-top:6px}
+
+    #modalNotif{position:fixed;inset:0;z-index:600;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(8,8,12,.75);backdrop-filter:blur(10px)}
+    #modalNotif.show{display:flex}
+    .modal-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:26px 22px;max-width:380px;width:100%;text-align:center;animation:fadeIn .3s ease}
+    .modal-card h3{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:700;letter-spacing:.08em;margin-bottom:8px}
+    .modal-card p{color:var(--text-muted);font-size:.9rem;margin-bottom:6px;white-space:pre-line}
+    .modal-from{font-size:.78rem;color:var(--text-dim);margin-bottom:16px}
+
+    @media(max-width:560px){
+      #dashboard{padding:6px}
+      .dash-body{flex-direction:column-reverse}
+      .right-sidebar{width:100%;border-left:none;border-top:1px solid var(--border);flex-direction:row;overflow-x:auto;padding:6px}
+      .side-item{flex-shrink:0;white-space:nowrap}
+      .hero h1{font-size:2.1rem}
+      .features-grid{grid-template-columns:1fr}
+      .dash-shell{max-height:none}
+      .dash-content{max-height:none}
+    }
+    footer{text-align:center;padding:12px;color:var(--text-dim);font-size:.72rem}
+  
+
+
+
+    /* ========== THEME SYSTEM ========== */
+    body.theme-cyber {
+      --bg: #060a10; --bg-card: #0c121c; --bg-elevated: #141c2a; --bg-sidebar: #080e16;
+      --border: #1e2a3c; --border-soft: #162032; --text: #e6eef8; --text-muted: #8494a8; --text-dim: #556578;
+      --accent: #22d3ee; --accent-soft: rgba(34,211,238,.14); --accent-glow: rgba(34,211,238,.4);
+      --radius: 3px; --radius-sm: 2px; --radius-lg: 4px;
+    }
+    body.theme-cyber .logo, body.theme-cyber .hero h1, body.theme-cyber .section-title,
+    body.theme-cyber .auth-title, body.theme-cyber .panel-title, body.theme-cyber .dash-logo,
+    body.theme-cyber .welcome-text, body.theme-cyber .modal-card h3 {
+      font-family: 'Space Grotesk', monospace !important; letter-spacing: .16em !important;
+      text-transform: uppercase; font-weight: 600 !important;
+    }
+    body.theme-cyber .btn { border-radius: 2px !important; text-transform: uppercase; letter-spacing: .07em; font-size: .78rem !important; }
+    body.theme-cyber .btn-primary { background: linear-gradient(90deg,#22d3ee,#06b6d4) !important; color: #060a10 !important; }
+    body.theme-cyber .logo-icon, body.theme-cyber .dash-logo .icon { border-radius: 2px !important; background: linear-gradient(135deg,#22d3ee,#0891b2) !important; }
+    body.theme-cyber .side-item.active { border-left: 2px solid #22d3ee; border-radius: 0 2px 2px 0 !important; }
+    body.theme-cyber .user-pill, body.theme-cyber .avatar-big { border-radius: 3px !important; }
+    body.theme-cyber .compare-left, body.theme-cyber .why-image { background: linear-gradient(145deg,#061018,#0c3a48 45%,#22d3ee) !important; }
+
+    body.theme-neon {
+      --bg: #0c0514; --bg-card: #160a22; --bg-elevated: #1f1030; --bg-sidebar: #100818;
+      --border: #3b1d5c; --border-soft: #2a1444; --text: #fce7ff; --text-muted: #c4a0d8; --text-dim: #8b6a9e;
+      --accent: #f472b6; --accent-soft: rgba(244,114,182,.16); --accent-glow: rgba(244,114,182,.45);
+      --radius: 20px; --radius-sm: 14px; --radius-lg: 28px;
+    }
+    body.theme-neon .logo, body.theme-neon .hero h1, body.theme-neon .section-title,
+    body.theme-neon .auth-title, body.theme-neon .panel-title, body.theme-neon .dash-logo {
+      font-family: 'Syne', sans-serif !important; letter-spacing: .12em !important;
+      background: linear-gradient(135deg,#fce7ff,#f472b6,#c084fc) !important;
+      -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; background-clip: text !important;
+    }
+    body.theme-neon .btn-primary { background: linear-gradient(135deg,#f472b6,#c084fc) !important; color: #1a0a24 !important; border-radius: 999px !important; }
+    body.theme-neon .btn { border-radius: 999px !important; }
+    body.theme-neon .logo-icon, body.theme-neon .dash-logo .icon { border-radius: 50% !important; background: linear-gradient(135deg,#f472b6,#a855f7) !important; box-shadow: 0 0 24px rgba(244,114,182,.5) !important; }
+    body.theme-neon .dash-shell, body.theme-neon .panel-card, body.theme-neon .auth-card { border-radius: 24px !important; border-color: rgba(244,114,182,.25) !important; }
+    body.theme-neon .side-item.active { background: rgba(244,114,182,.15) !important; color: #f472b6 !important; border-radius: 16px !important; }
+    body.theme-neon .compare-left, body.theme-neon .why-image { background: linear-gradient(145deg,#1a0a28,#4a1d6e 40%,#f472b6) !important; }
+
+    body.theme-ember {
+      --bg: #0c0806; --bg-card: #16100c; --bg-elevated: #221810; --bg-sidebar: #120e0a;
+      --border: #3d2a1a; --border-soft: #2a1c12; --text: #faf0e6; --text-muted: #c4a882; --text-dim: #8a6e50;
+      --accent: #f59e0b; --accent-soft: rgba(245,158,11,.14); --accent-glow: rgba(245,158,11,.4);
+      --radius: 8px; --radius-sm: 6px; --radius-lg: 12px;
+    }
+    body.theme-ember .logo, body.theme-ember .hero h1, body.theme-ember .section-title,
+    body.theme-ember .auth-title, body.theme-ember .panel-title, body.theme-ember .dash-logo {
+      font-family: 'Syne', sans-serif !important; letter-spacing: .1em !important;
+      color: #fbbf24 !important; -webkit-text-fill-color: #fbbf24 !important;
+      background: none !important;
+    }
+    body.theme-ember .btn-primary { background: linear-gradient(135deg,#f59e0b,#ea580c) !important; color: #1a1008 !important; }
+    body.theme-ember .logo-icon, body.theme-ember .dash-logo .icon { background: linear-gradient(135deg,#f59e0b,#ea580c) !important; }
+    body.theme-ember .side-item.active { color: #f59e0b !important; background: rgba(245,158,11,.12) !important; }
+    body.theme-ember .compare-left, body.theme-ember .why-image { background: linear-gradient(145deg,#1a1008,#5c3010 40%,#f59e0b) !important; }
+
+    body.theme-moss {
+      --bg: #060e0a; --bg-card: #0c1812; --bg-elevated: #14241a; --bg-sidebar: #0a140e;
+      --border: #1e3a2a; --border-soft: #162820; --text: #e8f5ee; --text-muted: #8fb8a0; --text-dim: #5a8068;
+      --accent: #34d399; --accent-soft: rgba(52,211,153,.14); --accent-glow: rgba(52,211,153,.4);
+      --radius: 16px; --radius-sm: 10px; --radius-lg: 22px;
+    }
+    body.theme-moss .logo, body.theme-moss .hero h1, body.theme-moss .section-title,
+    body.theme-moss .auth-title, body.theme-moss .panel-title, body.theme-moss .dash-logo {
+      font-family: 'Syne', sans-serif !important; letter-spacing: .08em !important;
+      color: #6ee7b7 !important; -webkit-text-fill-color: #6ee7b7 !important; background: none !important;
+    }
+    body.theme-moss .btn-primary { background: linear-gradient(135deg,#34d399,#059669) !important; color: #062016 !important; }
+    body.theme-moss .logo-icon, body.theme-moss .dash-logo .icon { background: linear-gradient(135deg,#34d399,#059669) !important; border-radius: 12px !important; }
+    body.theme-moss .side-item.active { color: #34d399 !important; background: rgba(52,211,153,.12) !important; }
+    body.theme-moss .compare-left, body.theme-moss .why-image { background: linear-gradient(145deg,#06140e,#0d4a32 40%,#34d399) !important; }
+
+    body.theme-ivory {
+      --bg: #f4f1ea; --bg-card: #fffcf7; --bg-elevated: #ebe6dc; --bg-sidebar: #f0ebe3;
+      --border: #d4cfc4; --border-soft: #e0dbd0; --text: #1a1814; --text-muted: #6b6560; --text-dim: #9a948c;
+      --accent: #7c3aed; --accent-soft: rgba(124,58,237,.12); --accent-glow: rgba(124,58,237,.3);
+      --radius: 14px; --radius-sm: 10px; --radius-lg: 20px;
+    }
+    body.theme-ivory .logo, body.theme-ivory .hero h1, body.theme-ivory .section-title,
+    body.theme-ivory .auth-title, body.theme-ivory .panel-title, body.theme-ivory .dash-logo {
+      font-family: 'Syne', sans-serif !important; letter-spacing: .06em !important;
+      color: #1a1814 !important; -webkit-text-fill-color: #1a1814 !important; background: none !important;
+    }
+    body.theme-ivory .btn-primary { background: #7c3aed !important; color: #fff !important; }
+    body.theme-ivory .landing-header, body.theme-ivory .dash-top { background: rgba(255,252,247,.9) !important; }
+    body.theme-ivory .logo-icon, body.theme-ivory .dash-logo .icon { background: linear-gradient(135deg,#7c3aed,#5b21b6) !important; }
+    body.theme-ivory .side-item.active { color: #7c3aed !important; background: rgba(124,58,237,.1) !important; }
+    body.theme-ivory .compare-left, body.theme-ivory .why-image { background: linear-gradient(145deg,#ede9fe,#c4b5fd 40%,#7c3aed) !important; }
+    body.theme-ivory .beta-banner { background: linear-gradient(90deg,#7c3aed,#a78bfa) !important; color: #fff !important; }
+
+
+    body.theme-void {
+      --bg: #050506; --bg-card: #0c0c0e; --bg-elevated: #141416; --bg-sidebar: #08080a;
+      --border: #222228; --border-soft: #18181c; --text: #f5f5f5; --text-muted: #888892; --text-dim: #55555e;
+      --accent: #818cf8; --accent-soft: rgba(129,140,248,.12); --accent-glow: rgba(129,140,248,.35);
+      --radius: 2px; --radius-sm: 2px; --radius-lg: 2px;
+    }
+    body.theme-void .logo, body.theme-void .hero h1, body.theme-void .section-title,
+    body.theme-void .auth-title, body.theme-void .panel-title, body.theme-void .dash-logo {
+      font-family: 'Space Grotesk', sans-serif !important; letter-spacing: .22em !important;
+      text-transform: uppercase; font-weight: 500 !important;
+      color: #f5f5f5 !important; -webkit-text-fill-color: #f5f5f5 !important; background: none !important;
+    }
+    body.theme-void .btn { border-radius: 0 !important; letter-spacing: .12em; text-transform: uppercase; font-size: .75rem !important; }
+    body.theme-void .btn-primary { background: #818cf8 !important; color: #050506 !important; box-shadow: none !important; }
+    body.theme-void .logo-icon, body.theme-void .dash-logo .icon { border-radius: 0 !important; background: #818cf8 !important; box-shadow: none !important; }
+    body.theme-void .dash-shell, body.theme-void .panel-card, body.theme-void .auth-card { border-radius: 0 !important; border-color: #2a2a32 !important; }
+    body.theme-void .side-item.active { border-left: 2px solid #818cf8; border-radius: 0 !important; color: #818cf8 !important; }
+    body.theme-void .user-pill, body.theme-void .avatar-big { border-radius: 0 !important; }
+    body.theme-void .compare-left, body.theme-void .why-image { background: linear-gradient(145deg,#050506,#1e1b4b 50%,#818cf8) !important; border-radius: 0 !important; }
+
+    body.theme-retro {
+      --bg: #0b0f0c; --bg-card: #0f1612; --bg-elevated: #15201a; --bg-sidebar: #0c1210;
+      --border: #1a3d2e; --border-soft: #132820; --text: #b8ffce; --text-muted: #5cff9a; --text-dim: #2a8f55;
+      --accent: #00ff9f; --accent-soft: rgba(0,255,159,.12); --accent-glow: rgba(0,255,159,.4);
+      --radius: 0; --radius-sm: 0; --radius-lg: 0;
+    }
+    body.theme-retro .logo, body.theme-retro .hero h1, body.theme-retro .section-title,
+    body.theme-retro .auth-title, body.theme-retro .panel-title, body.theme-retro .dash-logo {
+      font-family: 'Space Grotesk', monospace !important; letter-spacing: .14em !important;
+      text-transform: uppercase; font-weight: 600 !important;
+      color: #00ff9f !important; -webkit-text-fill-color: #00ff9f !important; background: none !important;
+      text-shadow: 0 0 12px rgba(0,255,159,.5);
+    }
+    body.theme-retro .btn { border-radius: 0 !important; border: 1px solid #00ff9f !important; letter-spacing: .1em; text-transform: uppercase; font-size: .75rem !important; }
+    body.theme-retro .btn-primary { background: transparent !important; color: #00ff9f !important; box-shadow: 0 0 16px rgba(0,255,159,.25) !important; }
+    body.theme-retro .btn-primary:hover { background: rgba(0,255,159,.15) !important; }
+    body.theme-retro .logo-icon, body.theme-retro .dash-logo .icon { border-radius: 0 !important; background: transparent !important; border: 1px solid #00ff9f; box-shadow: 0 0 12px rgba(0,255,159,.4) !important; }
+    body.theme-retro .dash-shell, body.theme-retro .panel-card, body.theme-retro .auth-card { border-radius: 0 !important; border-color: #00ff9f55 !important; box-shadow: 0 0 0 1px rgba(0,255,159,.1) !important; }
+    body.theme-retro .side-item.active { color: #00ff9f !important; background: rgba(0,255,159,.08) !important; border-left: 2px solid #00ff9f; border-radius: 0 !important; }
+    body.theme-retro .user-pill, body.theme-retro .avatar-big { border-radius: 0 !important; border-color: #00ff9f55 !important; }
+    body.theme-retro .compare-left, body.theme-retro .why-image { background: linear-gradient(145deg,#0b0f0c,#0a3d28 40%,#00ff9f) !important; border-radius: 0 !important; }
+    body.theme-retro .info-row { border-radius: 0 !important; border-color: #1a3d2e !important; }
+
+    .beta-banner {
+      display: none;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+      background: linear-gradient(90deg, var(--accent), #a78bfa);
+      color: #0a0a0c; text-align: center; font-size: .68rem; font-weight: 700;
+      letter-spacing: .18em; text-transform: uppercase; padding: 5px 8px;
+    }
+    body[class*="theme-"] .beta-banner { display: block; }
+    body[class*="theme-"] { padding-top: 26px; }
+
+    /* Background layers */
+    #bgLayer {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background: var(--bg);
+      transition: background .4s ease, filter .3s ease;
+    }
+    #bgLayer.blur-on { filter: blur(0px); }
+    body.blur-active .dash-shell,
+    body.blur-active .panel-card,
+    body.blur-active .auth-card,
+    body.blur-active .feat-card,
+    body.blur-active .why-card,
+    body.blur-active .about-block,
+    body.blur-active .start-cta,
+    body.blur-active .landing-header {
+      backdrop-filter: blur(16px) saturate(1.2);
+      -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    }
+    body.blur-active .dash-shell,
+    body.blur-active .panel-card,
+    body.blur-active .auth-card {
+      background: color-mix(in srgb, var(--bg-card) 78%, transparent);
+    }
+    body.bg-gradient #bgLayer {
+      background: radial-gradient(ellipse at 20% 0%, color-mix(in srgb, var(--accent) 25%, transparent), transparent 50%),
+                  radial-gradient(ellipse at 80% 100%, color-mix(in srgb, var(--accent) 15%, transparent), transparent 45%),
+                  var(--bg);
+    }
+    body.bg-mesh #bgLayer {
+      background:
+        radial-gradient(at 0% 0%, color-mix(in srgb, var(--accent) 20%, transparent) 0, transparent 50%),
+        radial-gradient(at 100% 0%, color-mix(in srgb, var(--accent) 12%, transparent) 0, transparent 40%),
+        radial-gradient(at 50% 100%, color-mix(in srgb, var(--accent) 18%, transparent) 0, transparent 50%),
+        var(--bg);
+    }
+    body.bg-vignette #bgLayer {
+      background: radial-gradient(ellipse at center, var(--bg-elevated) 0%, var(--bg) 70%);
+    }
+
+    /* Settings layout */
+    .settings-section {
+      margin-bottom: 14px;
+    }
+    .settings-section h4 {
+      font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: 10px;
+    }
+    .theme-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    }
+    .theme-card {
+      padding: 12px 10px; border-radius: var(--radius); border: 1px solid var(--border-soft);
+      background: var(--bg-elevated); cursor: pointer; text-align: center; transition: all .18s;
+    }
+    .theme-card:hover, .theme-card.active {
+      border-color: var(--accent); background: var(--accent-soft);
+    }
+    .theme-card .sw {
+      height: 28px; border-radius: 6px; margin-bottom: 8px;
+    }
+    .theme-card .nm { font-size: .78rem; font-weight: 600; }
+    .theme-card .ds { font-size: .68rem; color: var(--text-dim); margin-top: 2px; }
+    .bg-opts, .blur-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+
+
+    /* ===== LAYOUT VARIANTS (BETA) ===== */
+    body.layout-left .dash-body { flex-direction: row-reverse; }
+    body.layout-left .right-sidebar {
+      border-left: none !important;
+      border-right: 1px solid var(--border);
+    }
+    body.layout-left .side-item.active {
+      border-left: none !important;
+      border-right: 2px solid var(--accent);
+      border-radius: var(--radius-sm) 0 0 var(--radius-sm) !important;
+    }
+
+    body.layout-bottom .dash-body { flex-direction: column; }
+    body.layout-bottom .right-sidebar {
+      width: 100% !important;
+      flex-direction: row !important;
+      overflow-x: auto;
+      border-left: none !important;
+      border-top: 1px solid var(--border);
+      order: 2;
+      padding: 6px !important;
+    }
+    body.layout-bottom .right-sidebar .side-item {
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    body.layout-bottom .dash-content { order: 1; max-height: calc(100vh - 140px); }
+    body.layout-bottom .side-item.active {
+      border-left: none !important;
+      border-bottom: 2px solid var(--accent);
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0 !important;
+    }
+
+    body.layout-top .right-sidebar {
+      width: 100% !important;
+      flex-direction: row !important;
+      overflow-x: auto;
+      border-left: none !important;
+      border-bottom: 1px solid var(--border);
+      border-top: none !important;
+      order: -1;
+      padding: 6px 8px !important;
+      background: var(--bg-elevated) !important;
+    }
+    body.layout-top .dash-body { flex-direction: column; }
+    body.layout-top .dash-content { order: 1; }
+    body.layout-top .side-item.active {
+      border-left: none !important;
+      border-bottom: 2px solid var(--accent);
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0 !important;
+    }
+    body.layout-top .dash-top { border-bottom: none; }
+
+    body.layout-center .dash-shell {
+      max-width: 520px !important;
+    }
+    body.layout-center .right-sidebar {
+      display: none !important;
+    }
+    body.layout-center .dash-content { max-width: 100%; }
+    body.layout-center .dash-top-left .menu-tab { display: none; }
+    /* center layout uses top horizontal nav injected via theme */
+    body.layout-center .center-nav {
+      display: flex !important;
+    }
+    .center-nav {
+      display: none;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-elevated);
+    }
+    .center-nav button {
+      flex: 1 1 auto;
+      min-width: 70px;
+    }
+
+    body.btn-round .btn { border-radius: 999px !important; }
+    body.btn-round .user-pill, body.btn-round .avatar-big, body.btn-round .user-pill .av { border-radius: 999px !important; }
+    body.btn-round .side-item { border-radius: 999px !important; }
+    body.btn-round .panel-card, body.btn-round .dash-shell, body.btn-round .auth-card { border-radius: 24px !important; }
+    body.btn-round .info-row { border-radius: 999px !important; }
+
+    body.btn-square .btn { border-radius: 0 !important; }
+    body.btn-square .user-pill, body.btn-square .avatar-big, body.btn-square .user-pill .av { border-radius: 0 !important; }
+    body.btn-square .side-item { border-radius: 0 !important; }
+    body.btn-square .panel-card, body.btn-square .dash-shell, body.btn-square .auth-card,
+    body.btn-square .feat-card, body.btn-square .info-row, body.btn-square .logo-icon { border-radius: 0 !important; }
+
+    body.btn-soft .btn { border-radius: 10px !important; }
+    body.btn-soft .panel-card, body.btn-soft .dash-shell { border-radius: 16px !important; }
+
+    body.hero-compact .hero { padding: 24px 0 16px !important; }
+    body.hero-compact .hero h1 { font-size: 1.8rem !important; }
+    body.hero-compact .features-grid { grid-template-columns: 1fr !important; }
+    body.hero-wide .hero h1 { font-size: 3.2rem !important; letter-spacing: .2em !important; }
+    body.hero-wide .landing-main { max-width: 900px !important; }
+
+    body.stack-cards .panel-card {
+      box-shadow: 6px 6px 0 color-mix(in srgb, var(--accent) 35%, transparent) !important;
+      border-width: 2px !important;
+    }
+
+
+    .luna-clock {
+      display: flex; flex-direction: column; align-items: flex-end;
+      line-height: 1.15; user-select: none;
+    }
+    .luna-clock .time {
+      font-family: 'Syne', 'Space Grotesk', sans-serif;
+      font-weight: 700; font-size: 1.05rem; letter-spacing: .08em;
+      color: var(--text); font-variant-numeric: tabular-nums;
+    }
+    .luna-clock .date {
+      font-size: .68rem; color: var(--text-dim); letter-spacing: .04em;
+      margin-top: 2px;
+    }
+    .landing-header .luna-clock { margin-right: 4px; }
+    .dash-top .luna-clock { margin-right: 6px; }
+    @media(max-width:400px){
+      .luna-clock .date { display: none; }
+      .luna-clock .time { font-size: .95rem; }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="beta-banner" id="betaBanner">THEME PREVIEW</div>
+  <div id="bgLayer"></div>
+  <canvas id="particles"></canvas>
+  <svg style="display:none">
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
+    <symbol id="i-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+    <symbol id="i-palette" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r="1.5"/><circle cx="17.5" cy="10.5" r="1.5"/><circle cx="8.5" cy="7.5" r="1.5"/><circle cx="6.5" cy="12.5" r="1.5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.7-.1 2.5-.3"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></symbol>
+    <symbol id="i-msg" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></symbol>
+  </svg>
+
+  <!-- LANDING -->
+  <div id="landing" class="page">
+    <header class="landing-header">
+      <div class="logo"><span class="logo-icon"><svg viewBox="0 0 24 24"><use href="#i-moon"/></svg></span> LunaVisuals</div>
+      <div class="luna-clock" id="landingClock"><div class="time">--:--</div><div class="date">—</div></div>
+      <div class="header-actions" id="landingAuthArea">
+        <button class="btn btn-secondary btn-sm" onclick="openAuth('login')">Вход</button>
+        <button class="btn btn-primary btn-sm" onclick="openAuth('register')">Регистрация</button>
+      </div>
+    </header>
+    <div class="landing-main">
+      <div class="hero">
+        <div class="hero-badge">Minecraft Visuals</div>
+        <h1>LunaVisuals</h1>
+        <p>Новый визуальный клиент для Minecraft. Мягкий свет, атмосфера и производительность — без компромиссов.</p>
+        <div class="hero-btns" id="heroBtns">
+          <button class="btn btn-primary btn-lg" onclick="openAuth('register')">Начать</button>
+          <button class="btn btn-secondary btn-lg" onclick="document.getElementById('compareSection').scrollIntoView({behavior:'smooth'})">Смотреть демо</button>
+        </div>
+      </div>
+
+      <div class="about-block">
+        <p><strong style="color:var(--text)">LunaVisuals</strong> — это проект, созданный с нуля. Мы делаем визуалы, которые выглядят дорого, но работают даже на слабых ПК.</p>
+        <p>Никаких обещаний миллионов игроков. Только честный клиент, аккуратный дизайн и постоянные обновления. Если тебе важна атмосфера в игре — ты по адресу.</p>
+        <p>Сейчас проект на старте. Каждый, кто регистрируется, становится частью раннего сообщества.</p>
+      </div>
+
+      <h2 class="section-title">Что внутри</h2>
+      <p class="section-sub">Основные возможности клиента</p>
+      <div class="features-grid">
+        <div class="feat-card"><div class="feat-icon"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></div><h3>Шейдеры</h3><p>Мягкое освещение, объёмные тени и глубина кадра.</p></div>
+        <div class="feat-card"><div class="feat-icon"><svg viewBox="0 0 24 24"><use href="#i-zap"/></svg></div><h3>Оптимизация</h3><p>Стабильный FPS на слабых системах.</p></div>
+        <div class="feat-card"><div class="feat-icon"><svg viewBox="0 0 24 24"><use href="#i-palette"/></svg></div><h3>Свой стиль</h3><p>Уникальная палитра и настроение.</p></div>
+        <div class="feat-card"><div class="feat-icon"><svg viewBox="0 0 24 24"><use href="#i-refresh"/></svg></div><h3>Апдейты</h3><p>Новые эффекты и фиксы регулярно.</p></div>
+      </div>
+
+      <h2 class="section-title">Почему Luna</h2>
+      <div class="why-card">
+        <div class="why-image"><svg viewBox="0 0 24 24"><use href="#i-moon"/></svg></div>
+        <ul class="why-list">
+          <li><span class="dot"></span> Фокус на атмосфере, а не на «геймерских» эффектах</li>
+          <li><span class="dot"></span> Лёгкий клиент без лишнего мусора</li>
+          <li><span class="dot"></span> Прямая связь с автором через саппорт</li>
+          <li><span class="dot"></span> Честные обновления без воды</li>
+        </ul>
+      </div>
+
+      <h2 class="section-title" id="compareSection">До и После</h2>
+      <p class="section-sub">Потяни полоску</p>
+      <div class="compare-container" id="compareContainer">
+        <div class="compare-img compare-right">
+          <div class="label">Обычный Minecraft</div>
+          <div class="mc-blocks">
+            <div class="mc-block grass"></div><div class="mc-block dirt"></div><div class="mc-block stone"></div><div class="mc-block wood"></div>
+            <div class="mc-block leaves"></div><div class="mc-block water"></div><div class="mc-block sand"></div><div class="mc-block coal"></div>
+            <div class="mc-block grass"></div><div class="mc-block dirt"></div><div class="mc-block stone"></div><div class="mc-block wood"></div>
+            <div class="mc-block leaves"></div><div class="mc-block water"></div><div class="mc-block sand"></div><div class="mc-block coal"></div>
+          </div>
+        </div>
+        <div class="compare-img compare-left" id="compareLeft">
+          <div class="label">Luna Visuals</div>
+          <div class="visual-icon"><svg viewBox="0 0 24 24"><use href="#i-moon"/></svg></div>
+        </div>
+        <div class="compare-handle" id="compareHandle"></div>
+      </div>
+      <div class="compare-labels"><span>← Luna Visuals</span><span>Обычный Minecraft →</span></div>
+
+      <div class="start-cta">
+        <p>Хочешь попробовать? Создай аккаунт — это бесплатно.</p>
+        <div id="ctaBtn"><button class="btn btn-primary btn-lg" onclick="openAuth('register')">Создать аккаунт</button></div>
+      </div>
+    </div>
+    <footer>© 2026 LunaVisuals</footer>
+  </div>
+
+  <!-- AUTH -->
+  <div id="authOverlay">
+    <div class="auth-card">
+      <button class="auth-close" onclick="closeAuth()">×</button>
+      <div id="registerForm">
+        <h2 class="auth-title">Регистрация</h2>
+        <p class="auth-sub">Создай аккаунт LunaVisuals</p>
+        <div class="message" id="regMessage"></div>
+        <div class="form-group"><label>Юзернейм</label><input type="text" id="regUser" placeholder="Придумай ник"></div>
+        <div class="form-group"><label>Пароль</label><input type="password" id="regPass" placeholder="Минимум 6 символов"></div>
+        <button class="btn btn-primary btn-block" onclick="handleRegister()">Зарегистрироваться</button>
+        <div class="auth-switch">Уже есть аккаунт? <a onclick="switchAuth('login')">Войти</a></div>
+      </div>
+      <div id="loginForm" style="display:none">
+        <h2 class="auth-title">Вход</h2>
+        <p class="auth-sub">Войди в свой аккаунт</p>
+        <div class="message" id="loginMessage"></div>
+        <div class="form-group"><label>Юзернейм</label><input type="text" id="loginUser" placeholder="Твой ник"></div>
+        <div class="form-group"><label>Пароль</label><input type="password" id="loginPass" placeholder="••••••••"></div>
+        <button class="btn btn-primary btn-block" onclick="handleLogin()">Войти</button>
+        <div class="auth-switch">Нет аккаунта? <a onclick="switchAuth('register')">Зарегистрироваться</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="welcomeOverlay">
+    <div class="welcome-text" id="welcomeName">Добро пожаловать</div>
+    <div class="welcome-sub">Загружаем панель...</div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" class="page">
+    <div class="dash-shell">
+      <div class="dash-top">
+        <div class="dash-top-left">
+          <div class="dash-logo"><span class="icon"><svg viewBox="0 0 24 24"><use href="#i-moon"/></svg></span> LunaVisuals</div>
+          <button class="menu-tab" onclick="goToLanding()">Меню</button>
+        </div>
+        <div class="luna-clock" id="dashClock"><div class="time">--:--</div><div class="date">—</div></div>
+        <div class="user-pill" onclick="showPanel('profile')">
+          <div class="av" id="topAvatar"><svg viewBox="0 0 24 24"><use href="#i-moon"/></svg></div>
+          <span class="name" id="topNick">Dev</span>
+        </div>
+      </div>
+      <div class="dash-body">
+        <div class="dash-content">
+          <!-- PROFILE -->
+          <div class="content-panel active" id="panel-profile">
+            <div class="panel-card">
+              <div class="profile-header">
+                <div class="avatar-big" id="userAvatar" onclick="toggleAvatarPicker()" title="Сменить аватар">
+                  <svg viewBox="0 0 24 24"><use href="#i-moon"/></svg>
+                  <span class="letter">D</span>
+                </div>
+                <div class="profile-meta">
+                  <h3 id="userNick">Dev</h3>
+                  <span class="role-badge" id="userRole">Админ</span>
+                </div>
+              </div>
+              <div id="avatarPicker" style="display:none;margin-bottom:12px">
+                <p style="font-size:.78rem;color:var(--text-dim);margin-bottom:8px">Системные / загрузить свою</p>
+                <div class="avatar-picker" id="avatarOpts"></div>
+                <input type="file" id="avatarFile" accept="image/*" style="display:none" onchange="uploadAvatar(event)">
+              </div>
+              <div class="info-grid" id="infoGrid"></div>
+              <div id="profileEditBtns" style="display:none;margin-top:12px;gap:8px;display:none">
+                <button class="btn btn-primary btn-sm" id="btnSaveProfile" onclick="saveProfileFields()" style="display:none">Сохранить</button>
+                <button class="btn btn-secondary btn-sm" id="btnEditProfile" onclick="enableProfileEdit()">Редактировать профиль</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- CLIENT -->
+          <div class="content-panel" id="panel-client">
+            <div class="panel-card">
+              <h3 class="panel-title">Клиент</h3>
+              <p style="color:var(--text-muted);font-size:.88rem;margin-bottom:12px">Скачай последнюю версию LunaVisuals</p>
+              <button class="btn btn-primary btn-block" style="margin-bottom:8px" onclick="downloadClient()">Скачать клиент</button>
+              <button class="btn btn-secondary btn-block" onclick="showToast('Проверка','Обновлений нет')">Проверить обновления</button>
+            </div>
+            <div class="panel-card">
+              <h3 class="panel-title">Обновления</h3>
+              <div id="updatesList"><p style="color:var(--text-dim);font-size:.86rem">Пока нет обновлений</p></div>
+            </div>
+          </div>
+
+          <!-- SUPPORT -->
+          <div class="content-panel" id="panel-support">
+            <div class="panel-card">
+              <h3 class="panel-title">Поддержка</h3>
+              <div class="support-grid">
+                <div class="support-card"><div class="ic"><svg viewBox="0 0 24 24"><use href="#i-msg"/></svg></div><div><h4>Telegram</h4><p>Быстрые ответы</p><button class="btn btn-secondary btn-sm" style="margin-top:6px">Написать</button></div></div>
+                <div class="support-card"><div class="ic"><svg viewBox="0 0 24 24"><use href="#i-users"/></svg></div><div><h4>Discord</h4><p>Сообщество</p><button class="btn btn-secondary btn-sm" style="margin-top:6px">Присоединиться</button></div></div>
+                <div class="support-card"><div class="ic"><svg viewBox="0 0 24 24"><use href="#i-mail"/></svg></div><div><h4>Email</h4><p>support@lunavisuals.dev</p></div></div>
+                <div class="support-card"><div class="ic"><svg viewBox="0 0 24 24"><use href="#i-help"/></svg></div><div><h4>FAQ</h4><p>Частые вопросы</p></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SETTINGS -->
+          <div class="content-panel" id="panel-settings">
+            <div class="panel-card">
+              <h3 class="panel-title">Настройки</h3>
+              <div class="admin-tabs" id="settingsTabs">
+                <button class="admin-tab active" data-stab="beta" onclick="settingsTab('beta')">Бета</button>
+                <button class="admin-tab" data-stab="colors" onclick="settingsTab('colors')">Цвета</button>
+                <button class="admin-tab" data-stab="bg" onclick="settingsTab('bg')">Фон</button>
+                <button class="admin-tab" data-stab="fx" onclick="settingsTab('fx')">Эффекты</button>
+                <button class="admin-tab" data-stab="account" onclick="settingsTab('account')">Аккаунт</button>
+              </div>
+
+              <div class="admin-pane active" id="stab-beta">
+                <p style="color:var(--text-muted);font-size:.84rem;line-height:1.55;margin-bottom:12px">Визуальные темы оформления. Меняют цвета, шрифты и настроение сайта.</p>
+                <div style="font-size:.7rem;color:var(--text-dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Сейчас: <span id="betaStatus" style="color:var(--accent)">Default</span></div>
+                <div class="theme-grid" id="themeGrid">
+                  <div class="theme-card active" data-theme="" onclick="setTheme('')">
+                    <div class="sw" style="background:linear-gradient(135deg,#a78bfa,#6d28d9)"></div>
+                    <div class="nm">Default</div>
+                    <div class="ds">Классика</div>
+                  </div>
+                  <div class="theme-card" data-theme="theme-cyber" onclick="setTheme('theme-cyber')">
+                    <div class="sw" style="background:linear-gradient(135deg,#22d3ee,#0891b2)"></div>
+                    <div class="nm">Cyber</div>
+                    <div class="ds">Tech cyan</div>
+                  </div>
+                  <div class="theme-card" data-theme="theme-neon" onclick="setTheme('theme-neon')">
+                    <div class="sw" style="background:linear-gradient(135deg,#f472b6,#c084fc)"></div>
+                    <div class="nm">Neon</div>
+                    <div class="ds">Pink glow</div>
+                  </div>
+                  <div class="theme-card" data-theme="theme-ember" onclick="setTheme('theme-ember')">
+                    <div class="sw" style="background:linear-gradient(135deg,#f59e0b,#ea580c)"></div>
+                    <div class="nm">Ember</div>
+                    <div class="ds">Warm fire</div>
+                  </div>
+                  <div class="theme-card" data-theme="theme-moss" onclick="setTheme('theme-moss')">
+                    <div class="sw" style="background:linear-gradient(135deg,#34d399,#059669)"></div>
+                    <div class="nm">Moss</div>
+                    <div class="ds">Forest soft</div>
+                  </div>
+                  <div class="theme-card" data-theme="theme-void" onclick="setTheme('theme-void')">
+                    <div class="sw" style="background:linear-gradient(135deg,#111,#6366f1)"></div>
+                    <div class="nm">Void</div>
+                    <div class="ds">Minimal dark</div>
+                  </div>
+                  <div class="theme-card" data-theme="theme-retro" onclick="setTheme('theme-retro')">
+                    <div class="sw" style="background:linear-gradient(135deg,#00ff9f,#00b8ff)"></div>
+                    <div class="nm">Retro</div>
+                    <div class="ds">80s terminal</div>
+                  </div>
+                  <div class="theme-card" data-theme="theme-ivory" onclick="setTheme('theme-ivory')">
+                    <div class="sw" style="background:linear-gradient(135deg,#f4f1ea,#7c3aed)"></div>
+                    <div class="nm">Ivory</div>
+                    <div class="ds">Light mode</div>
+                  </div>
+                </div>
+                <button class="btn btn-secondary btn-block" style="margin-top:12px" onclick="setTheme('')">Вернуть Default</button>
+              </div>
+
+              <div class="admin-pane" id="stab-colors">
+                <p style="color:var(--text-dim);font-size:.78rem;margin-bottom:10px">Акцент в режиме Default. В темах цвет уже задан стилем.</p>
+                <div class="color-grid">
+                  <div class="color-swatch active" data-color="#a78bfa" style="background:#a78bfa" onclick="setAccent(this)"></div>
+                  <div class="color-swatch" data-color="#60a5fa" style="background:#60a5fa" onclick="setAccent(this)"></div>
+                  <div class="color-swatch" data-color="#34d399" style="background:#34d399" onclick="setAccent(this)"></div>
+                  <div class="color-swatch" data-color="#f472b6" style="background:#f472b6" onclick="setAccent(this)"></div>
+                  <div class="color-swatch" data-color="#fbbf24" style="background:#fbbf24" onclick="setAccent(this)"></div>
+                  <div class="color-swatch" data-color="#f87171" style="background:#f87171" onclick="setAccent(this)"></div>
+                  <div class="color-swatch" data-color="#2dd4bf" style="background:#2dd4bf" onclick="setAccent(this)"></div>
+                  <div class="color-swatch" data-color="#c084fc" style="background:#c084fc" onclick="setAccent(this)"></div>
+                  <div class="color-swatch" data-color="#22d3ee" style="background:#22d3ee" onclick="setAccent(this)"></div>
+                  <div class="color-swatch" data-color="#fb923c" style="background:#fb923c" onclick="setAccent(this)"></div>
+                  <div class="color-swatch" data-color="#e2e8f0" style="background:#e2e8f0" onclick="setAccent(this)"></div>
+                  <div class="color-swatch" data-color="#a3e635" style="background:#a3e635" onclick="setAccent(this)"></div>
+                </div>
+              </div>
+
+              <div class="admin-pane" id="stab-bg">
+                <h4 style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px">Тип фона</h4>
+                <div class="bg-opts" style="margin-bottom:14px">
+                  <div class="particle-opt active" data-bg="solid" onclick="setBg(this)">Однотон</div>
+                  <div class="particle-opt" data-bg="gradient" onclick="setBg(this)">Градиент</div>
+                  <div class="particle-opt" data-bg="mesh" onclick="setBg(this)">Mesh</div>
+                  <div class="particle-opt" data-bg="vignette" onclick="setBg(this)">Виньетка</div>
+                </div>
+                <h4 style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px">Блюр карточек</h4>
+                <div class="blur-opts">
+                  <div class="particle-opt active" id="blurOff" onclick="setBlur(false)">Выкл</div>
+                  <div class="particle-opt" id="blurOn" onclick="setBlur(true)">Вкл</div>
+                </div>
+              </div>
+
+              <div class="admin-pane" id="stab-fx">
+                <h4 style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px">Партикл-эффект</h4>
+                <div class="particle-opts">
+                  <div class="particle-opt active" data-p="stars" onclick="setParticles(this)">Звёзды</div>
+                  <div class="particle-opt" data-p="comets" onclick="setParticles(this)">Кометы</div>
+                  <div class="particle-opt" data-p="fireflies" onclick="setParticles(this)">Светлячки</div>
+                  <div class="particle-opt" data-p="rain" onclick="setParticles(this)">Дождь</div>
+                  <div class="particle-opt" data-p="snow" onclick="setParticles(this)">Снег</div>
+                  <div class="particle-opt" data-p="sakura" onclick="setParticles(this)">Сакура</div>
+                  <div class="particle-opt" data-p="none" onclick="setParticles(this)">Выкл</div>
+                </div>
+              </div>
+
+              <div class="admin-pane" id="stab-account">
+                <button class="btn btn-secondary btn-block" onclick="handleLogout()">Выйти из аккаунта</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- HOWTO -->
+          <div class="content-panel" id="panel-howto">
+            <div class="panel-card">
+              <h3 class="panel-title">Как получить клиент</h3>
+              <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7;margin-bottom:16px">Всё просто. Клиент лежит в разделе «Клиент» — скачиваешь, запускаешь, играешь.</p>
+              <div style="display:grid;gap:10px">
+                <div style="padding:14px;background:var(--bg-elevated);border:1px solid var(--border-soft);border-radius:var(--radius);display:flex;gap:12px;align-items:flex-start">
+                  <div style="width:28px;height:28px;border-radius:8px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0">1</div>
+                  <div><div style="font-weight:600;font-size:.9rem;margin-bottom:2px">Открой «Клиент»</div><div style="font-size:.8rem;color:var(--text-muted)">В боковом меню справа</div></div>
+                </div>
+                <div style="padding:14px;background:var(--bg-elevated);border:1px solid var(--border-soft);border-radius:var(--radius);display:flex;gap:12px;align-items:flex-start">
+                  <div style="width:28px;height:28px;border-radius:8px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0">2</div>
+                  <div><div style="font-weight:600;font-size:.9rem;margin-bottom:2px">Скачай файл</div><div style="font-size:.8rem;color:var(--text-muted)">Кнопка «Скачать клиент»</div></div>
+                </div>
+                <div style="padding:14px;background:var(--bg-elevated);border:1px solid var(--border-soft);border-radius:var(--radius);display:flex;gap:12px;align-items:flex-start">
+                  <div style="width:28px;height:28px;border-radius:8px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0">3</div>
+                  <div><div style="font-weight:600;font-size:.9rem;margin-bottom:2px">Установи и играй</div><div style="font-size:.8rem;color:var(--text-muted)">Запускай и наслаждайся визуалами</div></div>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-block" style="margin-top:16px" onclick="showPanel('client')">Перейти к клиенту</button>
+            </div>
+          </div>
+
+          <!-- ADMIN -->
+          <div class="content-panel" id="panel-admin">
+            <div class="panel-card">
+              <h3 class="panel-title">Админ-панель</h3>
+              <div class="admin-tabs">
+                <button class="admin-tab active" data-tab="upd" onclick="adminTab('upd')">Апдейты</button>
+                <button class="admin-tab" data-tab="notif" onclick="adminTab('notif')">Оповещения</button>
+                <button class="admin-tab" data-tab="file" onclick="adminTab('file')">Файл клиента</button>
+                <button class="admin-tab" data-tab="users" onclick="adminTab('users')">Юзеры</button>
+                <button class="admin-tab" data-tab="stats" onclick="adminTab('stats')">Статы</button>
+                <button class="admin-tab" data-tab="actions" onclick="adminTab('actions')">Действия</button>
+                              </div>
+
+              <div class="admin-pane active" id="atab-upd">
+                <div class="form-group"><label>Заголовок</label><input type="text" id="updTitle" value="Добавлено"></div>
+                <div class="form-group"><label>Текст</label><textarea id="updBody">+Партиклы
++Оптимизация
++Новые эффекты</textarea></div>
+                <button class="btn btn-primary btn-block" onclick="postUpdate()">Опубликовать апдейт</button>
+              </div>
+
+              <div class="admin-pane" id="atab-notif">
+                <div class="form-group"><label>Тип</label>
+                  <select id="notifType"><option value="toast">Снизу</option><option value="modal">По центру</option><option value="both">Оба</option></select>
+                </div>
+                <div class="form-group"><label>Заголовок</label><input type="text" id="notifTitle" value="Внимание"></div>
+                <div class="form-group"><label>Текст</label><textarea id="notifBody">Новое обновление доступно!</textarea></div>
+                <div class="form-group"><label>От кого</label><input type="text" id="notifFrom" value="Команда LunaVisuals"></div>
+                <button class="btn btn-primary btn-block" onclick="sendNotif()">Отправить</button>
+              </div>
+
+              <div class="admin-pane" id="atab-file">
+                <p style="color:var(--text-muted);font-size:.86rem;margin-bottom:10px">Загрузи файл клиента. После этого кнопка «Скачать клиент» будет отдавать этот файл.</p>
+                <input type="file" id="clientFile" style="margin-bottom:10px;width:100%;font-size:.85rem;color:var(--text-muted)">
+                <button class="btn btn-primary btn-block" onclick="uploadClientFile()">Загрузить файл</button>
+                <div class="file-info" id="clientFileInfo">Файл не загружен</div>
+              </div>
+
+              <div class="admin-pane" id="atab-users">
+                <div id="usersList"></div>
+              </div>
+
+              <div class="admin-pane" id="atab-stats">
+                <div class="info-grid">
+                  <div class="info-row"><span class="info-label">Юзеров</span><span class="info-value" id="admStatUsers">0</span></div>
+                  <div class="info-row"><span class="info-label">Версия</span><span class="info-value" id="admStatVer">v1</span></div>
+                  <div class="info-row"><span class="info-label">Апдейтов</span><span class="info-value" id="admStatUpd">0</span></div>
+                </div>
+              </div>
+
+              <div class="admin-pane" id="atab-actions">
+                <button class="btn btn-secondary btn-block" style="margin-bottom:8px" onclick="adminClearUpdates()">Очистить апдейты</button>
+                <button class="btn btn-secondary btn-block" style="margin-bottom:8px" onclick="adminResetVersion()">Сброс версии</button>
+                <button class="btn btn-secondary btn-block" style="margin-bottom:8px" onclick="adminBroadcast()">Тест-оповещение</button>
+                <button class="btn btn-danger btn-block" onclick="adminClearUsers()">Сброс юзеров (кроме Dev)</button>
+              </div>
+
+              
+            </div>
+          </div>
+        </div>
+
+        <aside class="right-sidebar">
+          <button class="side-item active" data-panel="profile" onclick="showPanel('profile')"><span class="ic"><svg viewBox="0 0 24 24"><use href="#i-user"/></svg></span> Профиль</button>
+          <button class="side-item" data-panel="client" onclick="showPanel('client')"><span class="ic"><svg viewBox="0 0 24 24"><use href="#i-download"/></svg></span> Клиент</button>
+          <button class="side-item" data-panel="support" onclick="showPanel('support')"><span class="ic"><svg viewBox="0 0 24 24"><use href="#i-mail"/></svg></span> Саппорт</button>
+          <button class="side-item" data-panel="howto" onclick="showPanel('howto')"><span class="ic"><svg viewBox="0 0 24 24"><use href="#i-help"/></svg></span> Как получить</button>
+          <button class="side-item" data-panel="settings" onclick="showPanel('settings')"><span class="ic"><svg viewBox="0 0 24 24"><use href="#i-settings"/></svg></span> Настройки</button>
+          <button class="side-item" data-panel="admin" id="adminBtn" style="display:none" onclick="showPanel('admin')"><span class="ic"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span> Админ</button>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastContainer"></div>
+  <div id="modalNotif">
+    <div class="modal-card">
+      <h3 id="modalTitle">Внимание</h3>
+      <p id="modalBody">Сообщение</p>
+      <div class="modal-from" id="modalFrom">От: Команда</div>
+      <button class="btn btn-primary" onclick="closeModal()">Закрыть</button>
+    </div>
+  </div>
+
+  <script>
+    const K={users:'luna_users',cur:'luna_current',accent:'luna_accent',part:'luna_particles',upd:'luna_updates',ver:'luna_version',uid:'luna_uid',client:'luna_client_file'};
+    const moonSVG='<svg viewBox="0 0 24 24"><use href="#i-moon"/></svg>';
+    const presets=[
+      {t:'moon',h:moonSVG},{t:'letter',letter:1},
+      {t:'star',h:'<svg viewBox="0 0 24 24"><use href="#i-star"/></svg>'},
+      {t:'zap',h:'<svg viewBox="0 0 24 24"><use href="#i-zap"/></svg>'},
+      {t:'shield',h:'<svg viewBox="0 0 24 24"><use href="#i-shield"/></svg>'},
+      {t:'user',h:'<svg viewBox="0 0 24 24"><use href="#i-user"/></svg>'},
+      {t:'bell',h:'<svg viewBox="0 0 24 24"><use href="#i-bell"/></svg>'}
+    ];
+    const colors=['linear-gradient(135deg,#a78bfa,#6d28d9)','linear-gradient(135deg,#60a5fa,#2563eb)','linear-gradient(135deg,#34d399,#059669)','linear-gradient(135deg,#f472b6,#db2777)','linear-gradient(135deg,#fbbf24,#d97706)','linear-gradient(135deg,#f87171,#dc2626)','linear-gradient(135deg,#2dd4bf,#0d9488)','linear-gradient(135deg,#c084fc,#7c3aed)'];
+
+    function initUsers(){
+      let u=JSON.parse(localStorage.getItem(K.users)||'[]');
+      if(!u.some(x=>x.username.toLowerCase()==='dev')){
+        u.push({username:'Dev',password:'198639090',role:'Админ',uid:'0000',registered:new Date().toISOString().slice(0,10),hwid:'None',avatarType:'moon',avatarColor:0,customAvatar:null});
+        localStorage.setItem(K.users,JSON.stringify(u));
+        if(!localStorage.getItem(K.uid)) localStorage.setItem(K.uid,'1');
+      }
+      let ch=false;
+      u.forEach(x=>{
+        if(x.uid===undefined){x.uid=nextUID();ch=1}
+        if(!x.avatarType){x.avatarType='moon';ch=1}
+        if(x.username==='Dev'&&(!x.registered||x.registered.length<8)){x.registered=new Date().toISOString().slice(0,10);ch=1}
+      });
+      if(ch) localStorage.setItem(K.users,JSON.stringify(u));
+    }
+    function nextUID(){let n=+localStorage.getItem(K.uid)||0;const s=String(n).padStart(4,'0');localStorage.setItem(K.uid,String(n+1));return s}
+    function getUsers(){return JSON.parse(localStorage.getItem(K.users)||'[]')}
+    function saveUsers(u){localStorage.setItem(K.users,JSON.stringify(u))}
+    function getCur(){return JSON.parse(localStorage.getItem(K.cur)||'null')}
+    function setCur(u){localStorage.setItem(K.cur,JSON.stringify(u))}
+    function clearCur(){localStorage.removeItem(K.cur)}
+
+    /* particles */
+    let pMode='stars',ps=[],anim;
+    const cv=document.getElementById('particles'),cx=cv.getContext('2d');
+    function resize(){cv.width=innerWidth;cv.height=innerHeight}
+    addEventListener('resize',()=>{resize();initP()});
+    function initP(){ps=[];const n=pMode==='none'?0:pMode==='comets'?30:pMode==='fireflies'?50:pMode==='rain'?90:pMode==='snow'?70:pMode==='sakura'?45:70;for(let i=0;i<n;i++)ps.push(mkP())}
+    function mkP(){
+      if(pMode==='comets')return{x:Math.random()*cv.width,y:Math.random()*cv.height*.5,vx:1.5+Math.random()*2.5,vy:.8+Math.random()*1.5,len:20+Math.random()*35,a:.4+Math.random()*.4};
+      if(pMode==='fireflies')return{x:Math.random()*cv.width,y:Math.random()*cv.height,vx:(Math.random()-.5)*.45,vy:(Math.random()-.5)*.45,r:1.5+Math.random()*2.2,a:.3+Math.random()*.5,ph:Math.random()*6};
+      if(pMode==='rain')return{x:Math.random()*cv.width,y:Math.random()*cv.height,vy:8+Math.random()*10,len:12+Math.random()*18,a:.15+Math.random()*.25};
+      if(pMode==='snow')return{x:Math.random()*cv.width,y:Math.random()*cv.height,vx:(Math.random()-.5)*.6,vy:.6+Math.random()*1.4,r:1.2+Math.random()*2.5,a:.25+Math.random()*.45};
+      if(pMode==='sakura')return{x:Math.random()*cv.width,y:Math.random()*cv.height,vx:(Math.random()-.5)*.8,vy:.5+Math.random()*1.2,r:3+Math.random()*4,a:.35+Math.random()*.45,rot:Math.random()*6,vr:(Math.random()-.5)*.04};
+      return{x:Math.random()*cv.width,y:Math.random()*cv.height,r:.6+Math.random()*1.6,a:.2+Math.random()*.5,tw:Math.random()*6};
+    }
+    function drawP(){
+      cx.clearRect(0,0,cv.width,cv.height);
+      if(pMode==='none'){anim=requestAnimationFrame(drawP);return}
+      const ac=getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()||'#a78bfa';
+      ps.forEach(p=>{
+        if(pMode==='comets'){cx.strokeStyle=ac;cx.globalAlpha=p.a;cx.lineWidth=1.6;cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(p.x-p.len,p.y-p.len*.5);cx.stroke();p.x+=p.vx;p.y+=p.vy;if(p.x>cv.width+40||p.y>cv.height+40){p.x=-20;p.y=Math.random()*cv.height*.5}}
+        else if(pMode==='fireflies'){p.ph+=.03;cx.fillStyle=ac;cx.globalAlpha=p.a*(.5+.5*Math.sin(p.ph));cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.fill();p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>cv.width)p.vx*=-1;if(p.y<0||p.y>cv.height)p.vy*=-1}
+        else if(pMode==='rain'){cx.strokeStyle='rgba(180,200,255,0.7)';cx.globalAlpha=p.a;cx.lineWidth=1.2;cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(p.x-1,p.y+p.len);cx.stroke();p.y+=p.vy;if(p.y>cv.height){p.y=-10;p.x=Math.random()*cv.width}}
+        else if(pMode==='snow'){cx.fillStyle='#fff';cx.globalAlpha=p.a;cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.fill();p.x+=p.vx;p.y+=p.vy;if(p.y>cv.height){p.y=-5;p.x=Math.random()*cv.width}if(p.x<0)p.x=cv.width;if(p.x>cv.width)p.x=0}
+        else if(pMode==='sakura'){p.rot+=p.vr;cx.save();cx.translate(p.x,p.y);cx.rotate(p.rot);cx.globalAlpha=p.a;cx.fillStyle='#ffb7c5';cx.beginPath();cx.ellipse(0,0,p.r,p.r*.55,0,0,7);cx.fill();cx.fillStyle='#ff8fab';cx.beginPath();cx.ellipse(0,0,p.r*.7,p.r*.4,0.8,0,7);cx.fill();cx.restore();p.x+=p.vx;p.y+=p.vy;if(p.y>cv.height+10){p.y=-10;p.x=Math.random()*cv.width}if(p.x<-10)p.x=cv.width+10;if(p.x>cv.width+10)p.x=-10}
+        else{p.tw+=.02;cx.fillStyle='#e4dcff';cx.globalAlpha=p.a*(.5+.5*Math.abs(Math.sin(p.tw)));cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.fill()}
+      });
+      cx.globalAlpha=1;anim=requestAnimationFrame(drawP);
+    }
+
+    function setParticles(el){pMode=el.dataset.p;localStorage.setItem(K.part,pMode);document.querySelectorAll('.particle-opt').forEach(o=>o.classList.toggle('active',o.dataset.p===pMode));initP()}
+
+    function initCompare(){
+      const c=document.getElementById('compareContainer'),l=document.getElementById('compareLeft'),h=document.getElementById('compareHandle');
+      let d=0;
+      function up(x){const r=c.getBoundingClientRect();let p=((x-r.left)/r.width)*100;p=Math.max(5,Math.min(95,p));l.style.clipPath=`inset(0 ${100-p}% 0 0)`;h.style.left=p+'%'}
+      function s(e){d=1;up(e.touches?e.touches[0].clientX:e.clientX)}
+      function m(e){if(!d)return;e.preventDefault();up(e.touches?e.touches[0].clientX:e.clientX)}
+      function e(){d=0}
+      h.addEventListener('mousedown',s);h.addEventListener('touchstart',s,{passive:0});
+      c.addEventListener('mousedown',s);c.addEventListener('touchstart',s,{passive:0});
+      addEventListener('mousemove',m);addEventListener('touchmove',m,{passive:0});
+      addEventListener('mouseup',e);addEventListener('touchend',e);
+    }
+
+    function openAuth(m){document.getElementById('authOverlay').classList.add('show');switchAuth(m||'register')}
+    function closeAuth(){document.getElementById('authOverlay').classList.remove('show')}
+    function switchAuth(m){document.getElementById('registerForm').style.display=m==='register'?'block':'none';document.getElementById('loginForm').style.display=m==='login'?'block':'none';document.getElementById('regMessage').style.display='none';document.getElementById('loginMessage').style.display='none'}
+    function msg(id,t,ty){const e=document.getElementById(id);e.textContent=t;e.className='message '+ty;e.style.display='block'}
+
+    function handleRegister(){
+      const n=document.getElementById('regUser').value.trim(),p=document.getElementById('regPass').value;
+      if(!n||!p){msg('regMessage','Заполни все поля','error');return}
+      if(p.length<6){msg('regMessage','Пароль минимум 6 символов','error');return}
+      const us=getUsers();
+      if(us.some(x=>x.username.toLowerCase()===n.toLowerCase())){msg('regMessage','Ник занят','error');return}
+      const nu={username:n,password:p,role:'Пользователь',uid:nextUID(),registered:new Date().toISOString().slice(0,10),hwid:'None',avatarType:'moon',avatarColor:Math.floor(Math.random()*8),customAvatar:null};
+      us.push(nu);saveUsers(us);msg('regMessage','Аккаунт создан!','success');setTimeout(()=>loginOk(nu),600);
+    }
+    function handleLogin(){
+      const n=document.getElementById('loginUser').value.trim(),p=document.getElementById('loginPass').value;
+      const u=getUsers().find(x=>x.username.toLowerCase()===n.toLowerCase()&&x.password===p);
+      if(!u){msg('loginMessage','Неверный ник или пароль','error');return}
+      msg('loginMessage','Успех!','success');setTimeout(()=>loginOk(u),500);
+    }
+    function loginOk(u){setCur(u);closeAuth();const o=document.getElementById('welcomeOverlay');document.getElementById('welcomeName').textContent='Добро пожаловать, '+u.username+'!';o.classList.add('show');setTimeout(()=>{o.classList.remove('show');enterDash(u)},1800)}
+    function enterDash(u){
+      document.getElementById('landing').style.display='none';
+      document.getElementById('dashboard').classList.add('show');
+      fillProfile(u);
+      document.getElementById('adminBtn').style.display=u.role==='Админ'?'flex':'none';
+      const pe=document.getElementById('profileEditBtns');
+      if(u.role==='Админ'){pe.style.display='flex';document.getElementById('btnEditProfile').style.display='inline-flex'}
+      else pe.style.display='none';
+      renderUpdates();renderUsers();updStats();showClientFileInfo();
+      showPanel('profile');updateLandingAuth();
+    applyBgBlurFromStorage();
+    }
+    function handleLogout(){clearCur();document.getElementById('dashboard').classList.remove('show');document.getElementById('landing').style.display='flex';updateLandingAuth()}
+    function goToLanding(){document.getElementById('dashboard').classList.remove('show');document.getElementById('landing').style.display='flex';updateLandingAuth()}
+
+    function updateLandingAuth(){
+      const u=getCur(),a=document.getElementById('landingAuthArea'),h=document.getElementById('heroBtns'),c=document.getElementById('ctaBtn');
+      if(u){
+        a.innerHTML=`<div class="user-pill" onclick="enterDash(getCur())"><div class="av" id="landAv"></div><span class="name">${u.username}</span></div>`;
+        renderAvEl(document.getElementById('landAv'),u);
+        h.innerHTML=`<button class="btn btn-primary btn-lg" onclick="enterDash(getCur())">Перейти в профиль</button><button class="btn btn-secondary btn-lg" onclick="document.getElementById('compareSection').scrollIntoView({behavior:'smooth'})">Смотреть демо</button>`;
+        c.innerHTML=`<button class="btn btn-primary btn-lg" onclick="enterDash(getCur())">Перейти в профиль</button>`;
+      }else{
+        a.innerHTML=`<button class="btn btn-secondary btn-sm" onclick="openAuth('login')">Вход</button><button class="btn btn-primary btn-sm" onclick="openAuth('register')">Регистрация</button>`;
+        h.innerHTML=`<button class="btn btn-primary btn-lg" onclick="openAuth('register')">Начать</button><button class="btn btn-secondary btn-lg" onclick="document.getElementById('compareSection').scrollIntoView({behavior:'smooth'})">Смотреть демо</button>`;
+        c.innerHTML=`<button class="btn btn-primary btn-lg" onclick="openAuth('register')">Создать аккаунт</button>`;
+      }
+    }
+
+    function showPanel(p){
+      document.querySelectorAll('.content-panel').forEach(x=>x.classList.remove('active'));
+      const e=document.getElementById('panel-'+p);if(e)e.classList.add('active');
+      document.querySelectorAll('.side-item').forEach(i=>i.classList.toggle('active',i.dataset.panel===p));
+      if(p==='admin'){renderUsers();updStats();showClientFileInfo()}
+    }
+
+    function renderAvEl(el,u){
+      if(!el)return;
+      el.style.background=colors[u.avatarColor||0];
+      el.innerHTML='';
+      if(u.customAvatar){const img=document.createElement('img');img.src=u.customAvatar;el.appendChild(img)}
+      else if(u.avatarType==='letter'){el.textContent=u.username.charAt(0).toUpperCase();el.style.color='#fff';el.style.fontWeight='700'}
+      else{const pr=presets.find(p=>p.t===u.avatarType)||presets[0];el.innerHTML=pr.h}
+    }
+
+    function fillProfile(u){
+      document.getElementById('userNick').textContent=u.username;
+      document.getElementById('userRole').textContent=u.role;
+      document.getElementById('topNick').textContent=u.username;
+      renderAvEl(document.getElementById('userAvatar'),u);
+      renderAvEl(document.getElementById('topAvatar'),u);
+      const grid=document.getElementById('infoGrid');
+      grid.innerHTML=`
+        <div class="info-row"><span class="info-label">Ник</span><span class="info-value" id="vNick">${esc(u.username)}</span></div>
+        <div class="info-row"><span class="info-label">UID</span><span class="info-value" id="vUID">${esc(u.uid||'0000')}</span></div>
+        <div class="info-row"><span class="info-label">Дата регистрации</span><span class="info-value" id="vDate">${esc(u.registered)}</span></div>
+        <div class="info-row"><span class="info-label">Роль</span><span class="info-value" id="vRole">${esc(u.role)}</span></div>
+        <div class="info-row"><span class="info-label">HWID</span><span class="info-value" id="vHWID">${esc(u.hwid||'None')}</span></div>`;
+      buildPicker(u);
+      document.getElementById('btnSaveProfile').style.display='none';
+      document.getElementById('btnEditProfile').style.display=u.role==='Админ'?'inline-flex':'none';
+    }
+
+    function enableProfileEdit(){
+      const u=getCur();if(!u||u.role!=='Админ')return;
+      document.getElementById('vNick').innerHTML=`<input id="eNick" value="${esc(u.username)}">`;
+      document.getElementById('vUID').innerHTML=`<input id="eUID" value="${esc(u.uid||'0000')}">`;
+      document.getElementById('vDate').innerHTML=`<input id="eDate" value="${esc(u.registered)}">`;
+      document.getElementById('vRole').innerHTML=`<input id="eRole" value="${esc(u.role)}">`;
+      document.getElementById('vHWID').innerHTML=`<input id="eHWID" value="${esc(u.hwid||'None')}">`;
+      document.getElementById('btnSaveProfile').style.display='inline-flex';
+      document.getElementById('btnEditProfile').style.display='none';
+    }
+    function saveProfileFields(){
+      const u=getCur();if(!u||u.role!=='Админ')return;
+      const nick=document.getElementById('eNick').value.trim();
+      if(!nick){showToast('Ошибка','Ник не может быть пустым');return}
+      u.username=nick;
+      u.uid=document.getElementById('eUID').value.trim();
+      u.registered=document.getElementById('eDate').value.trim();
+      u.role=document.getElementById('eRole').value.trim();
+      u.hwid=document.getElementById('eHWID').value.trim();
+      const us=getUsers();
+      const i=us.findIndex(x=>x.uid===u.uid||x.username===getCur().username);
+      // find by old reference
+      const idx=us.findIndex(x=>x.password===u.password&&(x.uid===u.uid||true));
+      // better: match by current before change - use stored
+      const all=getUsers();
+      const ix=all.findIndex(x=>x.password===u.password&&x.role==='Админ');
+      if(ix>=0){all[ix]=u;saveUsers(all)}
+      setCur(u);
+      fillProfile(u);
+      showToast('Сохранено','Профиль обновлён');
+    }
+
+    function buildPicker(u){
+      const box=document.getElementById('avatarOpts');
+      let html=presets.map(p=>{
+        const act=(!u.customAvatar&&u.avatarType===p.t)?'active':'';
+        const c=p.letter?`<span style="color:#fff;font-weight:700">${u.username.charAt(0).toUpperCase()}</span>`:p.h;
+        return`<div class="avatar-opt ${act}" onclick="pickAvatar('${p.t}')">${c}</div>`;
+      }).join('');
+      html+=`<div class="avatar-opt upload" onclick="document.getElementById('avatarFile').click()" title="Из галереи"><svg viewBox="0 0 24 24"><use href="#i-camera"/></svg></div>`;
+      box.innerHTML=html;
+    }
+    function toggleAvatarPicker(){const p=document.getElementById('avatarPicker');p.style.display=p.style.display==='none'?'block':'none'}
+    function pickAvatar(t){
+      const u=getCur();if(!u)return;
+      u.avatarType=t;u.customAvatar=null;
+      if(t==='letter')u.avatarColor=((u.avatarColor||0)+1)%8;
+      setCur(u);syncUser(u);fillProfile(u);
+    }
+    function uploadAvatar(e){
+      const f=e.target.files[0];if(!f)return;
+      if(f.size>500000){showToast('Ошибка','Файл слишком большой (макс ~500KB)');return}
+      const r=new FileReader();
+      r.onload=()=>{const u=getCur();if(!u)return;u.customAvatar=r.result;u.avatarType='custom';setCur(u);syncUser(u);fillProfile(u);showToast('Готово','Аватар обновлён')};
+      r.readAsDataURL(f);
+    }
+    function syncUser(u){
+      const us=getUsers();
+      const i=us.findIndex(x=>x.uid===u.uid);
+      if(i>=0){us[i]=u;saveUsers(us)}
+      else{const j=us.findIndex(x=>x.username===u.username);if(j>=0){us[j]=u;saveUsers(us)}}
+    }
+
+    function setAccent(el){
+      const c=el.dataset.color;
+      document.documentElement.style.setProperty('--accent',c);
+      document.documentElement.style.setProperty('--accent-soft',c+'24');
+      document.documentElement.style.setProperty('--accent-glow',c+'59');
+      localStorage.setItem(K.accent,c);
+      document.querySelectorAll('.color-swatch').forEach(s=>s.classList.toggle('active',s.dataset.color===c));
+    }
+
+    function getUpd(){return JSON.parse(localStorage.getItem(K.upd)||'[]')}
+    function getVer(){return +localStorage.getItem(K.ver)||1}
+    function postUpdate(){
+      const t=document.getElementById('updTitle').value.trim()||'Обновление';
+      const b=document.getElementById('updBody').value.trim()||'';
+      const v=getVer();
+      const list=getUpd();list.unshift({version:'v'+v,title:t,body:b,date:new Date().toLocaleDateString('ru-RU')});
+      localStorage.setItem(K.upd,JSON.stringify(list));localStorage.setItem(K.ver,String(v+1));
+      renderUpdates();updStats();
+      showToast('Клиент обновился','Доступна v'+v,'Посмотреть',()=>showPanel('client'));
+    }
+    function renderUpdates(){
+      const el=document.getElementById('updatesList'),list=getUpd();
+      if(!list.length){el.innerHTML='<p style="color:var(--text-dim);font-size:.86rem">Пока нет обновлений</p>';return}
+      el.innerHTML=list.map(u=>`<div class="update-item"><span class="update-ver">${u.version}</span><div class="update-title">${esc(u.title)}</div><div class="update-body">${esc(u.body)}</div><div class="update-date">${u.date}</div></div>`).join('');
+    }
+    function esc(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML}
+
+    function showToast(title,m,btn,fn){
+      const c=document.getElementById('toastContainer'),t=document.createElement('div');t.className='toast';
+      t.innerHTML=`<div class="icon">!</div><div><div class="title">${esc(title)}</div><div class="msg">${esc(m||'')}</div>${btn?`<div class="actions"><button class="btn btn-primary btn-sm">${esc(btn)}</button></div>`:''}</div>`;
+      if(btn&&fn)t.querySelector('button').onclick=()=>{fn();t.remove()};
+      c.appendChild(t);setTimeout(()=>t.remove(),7000);
+    }
+    function sendNotif(){
+      const ty=document.getElementById('notifType').value,ti=document.getElementById('notifTitle').value||'Внимание',b=document.getElementById('notifBody').value||'',f=document.getElementById('notifFrom').value||'Команда';
+      if(ty==='toast'||ty==='both')showToast(ti,b);
+      if(ty==='modal'||ty==='both'){document.getElementById('modalTitle').textContent=ti;document.getElementById('modalBody').textContent=b;document.getElementById('modalFrom').textContent='От: '+f;document.getElementById('modalNotif').classList.add('show')}
+    }
+    function closeModal(){document.getElementById('modalNotif').classList.remove('show')}
+
+    
+
+    const THEME_NAMES = {'':'Default','theme-cyber':'Cyber','theme-neon':'Neon','theme-ember':'Ember','theme-moss':'Moss','theme-ivory':'Ivory','theme-void':'Void','theme-retro':'Retro'};
+    function clearThemes(){
+      ['theme-cyber','theme-neon','theme-ember','theme-moss','theme-ivory','theme-void','theme-retro','beta'].forEach(c=>document.body.classList.remove(c));
+    }
+    function setTheme(name){
+      clearThemes();
+      ['layout-left','layout-bottom','layout-top','layout-center','btn-round','btn-square','btn-soft','hero-compact','hero-wide','stack-cards'].forEach(c=>document.body.classList.remove(c));
+      if(name) document.body.classList.add(name);
+      localStorage.setItem('luna_theme', name || '');
+      const st = document.getElementById('betaStatus');
+      if(st) st.textContent = THEME_NAMES[name] || 'Default';
+      document.querySelectorAll('.theme-card').forEach(c=>c.classList.toggle('active', (c.dataset.theme||'') === (name||'')));
+      const ban = document.getElementById('betaBanner');
+      if(ban) ban.textContent = name ? ('THEME · ' + (THEME_NAMES[name]||name).toUpperCase()) : '';
+      if(!name){
+        const sa = localStorage.getItem('luna_accent');
+        if(sa){
+          document.documentElement.style.setProperty('--accent', sa);
+          document.documentElement.style.setProperty('--accent-soft', sa+'24');
+          document.documentElement.style.setProperty('--accent-glow', sa+'59');
+        } else {
+          document.documentElement.style.removeProperty('--accent');
+          document.documentElement.style.removeProperty('--accent-soft');
+          document.documentElement.style.removeProperty('--accent-glow');
+        }
+      } else {
+        document.documentElement.style.removeProperty('--accent');
+        document.documentElement.style.removeProperty('--accent-soft');
+        document.documentElement.style.removeProperty('--accent-glow');
+      }
+      showToast('Тема', THEME_NAMES[name] || 'Default');
+    }
+    function applyBetaFromStorage(){
+      const t = localStorage.getItem('luna_theme') || '';
+      if(t) setTheme(t);
+      // migrate old beta flag
+      if(!t && localStorage.getItem('luna_beta')==='1'){ setTheme('theme-cyber'); localStorage.removeItem('luna_beta'); }
+    }
+    function setBlur(on){
+      document.body.classList.toggle('blur-active', !!on);
+      localStorage.setItem('luna_blur', on ? '1' : '0');
+      const onEl = document.getElementById('blurOn'), offEl = document.getElementById('blurOff');
+      if(onEl) onEl.classList.toggle('active', !!on);
+      if(offEl) offEl.classList.toggle('active', !on);
+    }
+    function setBg(el){
+      const bg = el.dataset.bg || 'solid';
+      document.body.classList.remove('bg-gradient','bg-mesh','bg-vignette');
+      if(bg==='gradient') document.body.classList.add('bg-gradient');
+      if(bg==='mesh') document.body.classList.add('bg-mesh');
+      if(bg==='vignette') document.body.classList.add('bg-vignette');
+      localStorage.setItem('luna_bg', bg);
+      document.querySelectorAll('[data-bg]').forEach(x=>x.classList.toggle('active', x.dataset.bg===bg));
+    }
+    function applyBgBlurFromStorage(){
+      if(localStorage.getItem('luna_blur')==='1') setBlur(true);
+      const bg = localStorage.getItem('luna_bg') || 'solid';
+      const el = document.querySelector('[data-bg="'+bg+'"]');
+      if(el) setBg(el);
+      else if(bg!=='solid'){ document.body.classList.add('bg-'+bg); }
+    }
+
+
+    function settingsTab(id){
+      document.querySelectorAll('#settingsTabs .admin-tab').forEach(t=>t.classList.toggle('active',t.dataset.stab===id));
+      document.querySelectorAll('#panel-settings .admin-pane').forEach(p=>p.classList.remove('active'));
+      const el=document.getElementById('stab-'+id); if(el) el.classList.add('active');
+    }
+    function adminTab(id){
+      document.querySelectorAll('.admin-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===id));
+      document.querySelectorAll('.admin-pane').forEach(p=>p.classList.remove('active'));
+      document.getElementById('atab-'+id).classList.add('active');
+    }
+    function renderUsers(){
+      const el=document.getElementById('usersList'),us=getUsers();
+      el.innerHTML=us.map(u=>`<div class="user-row"><span>${esc(u.username)} <span class="role">${esc(u.role)}</span></span><span style="color:var(--text-dim);font-size:.72rem">UID ${u.uid}</span></div>`).join('')||'<p style="color:var(--text-dim)">Нет юзеров</p>';
+    }
+    function updStats(){
+      document.getElementById('admStatUsers').textContent=getUsers().length;
+      document.getElementById('admStatVer').textContent='v'+getVer();
+      document.getElementById('admStatUpd').textContent=getUpd().length;
+    }
+    function adminClearUpdates(){if(confirm('Очистить апдейты?')){localStorage.setItem(K.upd,'[]');renderUpdates();updStats();showToast('Готово','Апдейты очищены')}}
+    function adminResetVersion(){if(confirm('Сброс версии?')){localStorage.setItem(K.ver,'1');updStats();showToast('Готово','Версия = 1')}}
+    function adminBroadcast(){showToast('Система','Тестовое оповещение');document.getElementById('modalTitle').textContent='Система';document.getElementById('modalBody').textContent='Тестовое массовое сообщение.';document.getElementById('modalFrom').textContent='От: Админ';document.getElementById('modalNotif').classList.add('show')}
+    function adminClearUsers(){if(confirm('Удалить всех кроме Dev?')){saveUsers(getUsers().filter(u=>u.username.toLowerCase()==='dev'));renderUsers();updStats();showToast('Готово','Юзеры сброшены')}}
+
+    /* Client file */
+    function uploadClientFile(){
+      const inp=document.getElementById('clientFile'),f=inp.files[0];
+      if(!f){showToast('Ошибка','Выбери файл');return}
+      if(f.size>4e6){showToast('Ошибка','Файл слишком большой (макс ~4MB для localStorage)');return}
+      const r=new FileReader();
+      r.onload=()=>{localStorage.setItem(K.client,JSON.stringify({name:f.name,data:r.result,size:f.size}));showClientFileInfo();showToast('Загружено',f.name)};
+      r.readAsDataURL(f);
+    }
+    function showClientFileInfo(){
+      const el=document.getElementById('clientFileInfo');
+      try{const j=JSON.parse(localStorage.getItem(K.client)||'null');
+        if(j)el.textContent=`Файл: ${j.name} (${Math.round(j.size/1024)} KB)`;
+        else el.textContent='Файл не загружен';
+      }catch{el.textContent='Файл не загружен'}
+    }
+    function downloadClient(){
+      try{
+        const j=JSON.parse(localStorage.getItem(K.client)||'null');
+        if(!j||!j.data){showToast('Клиент не загружен','Админ ещё не загрузил файл клиента');return}
+        const a=document.createElement('a');a.href=j.data;a.download=j.name||'LunaVisuals-client';a.click();
+        showToast('Скачивание',j.name);
+      }catch{showToast('Клиент не загружен','Админ ещё не загрузил файл клиента')}
+    }
+
+    /* init */
+    initUsers();resize();pMode=localStorage.getItem(K.part)||'stars';
+    document.querySelectorAll('.particle-opt').forEach(o=>o.classList.toggle('active',o.dataset.p===pMode));
+    initP();drawP();initCompare();
+    const sa=localStorage.getItem(K.accent);
+    if(sa){document.documentElement.style.setProperty('--accent',sa);document.documentElement.style.setProperty('--accent-soft',sa+'24');document.documentElement.style.setProperty('--accent-glow',sa+'59');document.querySelectorAll('.color-swatch').forEach(s=>s.classList.toggle('active',s.dataset.color===sa))}
+    updateLandingAuth();
+    applyBgBlurFromStorage();
+
+    function tickClock(){
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2,'0');
+      const mm = String(now.getMinutes()).padStart(2,'0');
+      const ss = String(now.getSeconds()).padStart(2,'0');
+      const time = hh+':'+mm;
+      const timeFull = hh+':'+mm+':'+ss;
+      const days = ['вс','пн','вт','ср','чт','пт','сб'];
+      const months = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+      const date = days[now.getDay()]+', '+now.getDate()+' '+months[now.getMonth()];
+      document.querySelectorAll('.luna-clock').forEach(el=>{
+        const t = el.querySelector('.time');
+        const d = el.querySelector('.date');
+        if(t) t.textContent = time;
+        if(d) d.textContent = date;
+      });
+    }
+    tickClock();
+    setInterval(tickClock, 1000);
+
+  </script>
+</body>
+</html>
